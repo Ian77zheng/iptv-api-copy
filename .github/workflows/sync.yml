@@ -1,0 +1,21 @@
+name: Native Scheduled Fork Sync
+
+on:
+  push:
+  schedule:
+    - cron: '0 */3 * * *'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+
+      - name: Sync upstream changes natively
+        run: gh repo sync ${{ github.repository }} --branch master # Fork 上游仓库主分支名字，一般叫 main ，老仓库会叫master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
